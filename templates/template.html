@@ -7,9 +7,9 @@
     <div class="aleft"><img src="{{ url_for('static', filename = 'images/'+user_image) }}" align="left" alt="User Image">
     <div class="aright"><img src="{{ url_for('static', filename = 'images/'+user_image_g) }}"  align="left" alt="User Image Grayscale">
    	<form method="POST" action="test">
-    	<input type="range" min={{min_1}} max={{max_1}} name="Slider_1" class="slider" step="0.01"/>
-    	<input type="range" min={{min_1}} max={{max_1}} name="Slider_2" class="slider" step="0.01"/>
-    	<input type="range" min={{min_1}} max={{max_1}} name="Slider_3" class="slider" step="0.01"/>
+    	<input type="range" min={{min_1}} max={{max_1}} name="Slider_1" class="slider" step="1" align="left"/>
+    	<input type="range" min={{min_2}} max={{max_2}} name="Slider_2" class="slider" step="0.01" align="left"/>
+    	<!-- <input type="range" min={{min_2}} max={{max_2}} name="Slider_3" class="slider" step="0.01" align="left"/> -->
       	<input type="submit" value="submit" />
     </form>
 </body>

@@ -136,3 +136,16 @@ def transform_rgb_with_lms(rgb, lms_t):
     # Transform back to RBG
     rgb_t = transform_colorspace(lms, lms2rgb)
     return rgb_t
+
+
+def process_image(user_image, lms_t):
+#   user_image = os.path.join(app.config['IMAGES_FOLDER'], user_image)
+  orig_img = np.asarray(Image.open(user_image).convert("RGB"), dtype=np.float16)
+  orig_img = gamma_correction(orig_img)
+  orig_image_g = transform_rgb_with_lms(orig_img, lms_t)
+  orig_image_g = array_to_img(orig_image_g)
+  user_image_t = add_suffix_to_filename(user_image)
+  user_image_t_file_name = os.path.basename(user_image_t)
+  orig_image_g.save(user_image_t)
+
+  return user_image_t_file_name
