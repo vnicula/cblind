@@ -17,14 +17,14 @@ LMSTT = np.array([[1, 0, 0], [0, 1, 0], [-0.15773032,  1.19465634, 0]], dtype=np
 @app.route("/")
 def home():
   # user_image = os.path.join(app.config['IMAGES_FOLDER'], 'colorful-cube-pattern_1336x768.jpg')
-  # user_image_file_name = 'ishiharatest_1_640.jpeg'
-  user_image_file_name = 'color_wheel_640.png'
+  user_image_file_name = 'ishiharatest_1_640.jpeg'
+  # user_image_file_name = 'color_wheel_640.png'
   # user_image_g = os.path.basename(img_utils.rgb2gray(os.path.join(app.config['IMAGES_FOLDER'], user_image)))
   user_image = os.path.join(app.config['IMAGES_FOLDER'], user_image_file_name)
   user_image_t_file_name = img_utils.process_image(user_image, LMSTT)
 
   return render_template("template.html", user_image=user_image_file_name, 
-    user_image_g=user_image_t_file_name, min_1=0, max_1=1, min_2=-1, max_2=1)
+    user_image_g=user_image_t_file_name, min_1=0, max_1=1, min_2=-1.25, max_2=1.25)
   
 
 @app.route("/test", methods=["POST"])
@@ -34,7 +34,7 @@ def test():
       slider_2 = float(request.form["Slider_2"])
       slider_3 = float(request.form["Slider_3"])
       slider_4 = float(request.form["Slider_4"])
-  user_image_file_name = 'color_wheel_640.png'
+  user_image_file_name = 'ishiharatest_1_640.jpeg'
   user_image = os.path.join(app.config['IMAGES_FOLDER'], user_image_file_name)
   lms_t = LMSTD
   lms_t[0][0] = slider_1
