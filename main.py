@@ -18,6 +18,10 @@ LMSTT = np.array([[1, 0, 0], [0, 1, 0], [-0.15773032,  1.19465634, 0]], dtype=np
 LMS_GABE1 = np.array([[ 0.58, 0.68, -0.26], [ 0., 1., 0.], [0., 0., 1.]], dtype=np.float16)
 LMS_GABE2 = np.array([[ 0.46, 0.62, -0.08], [ 0., 1., 0.], [0., 0., 1.]], dtype=np.float16)
 LMS_GABE3 = (LMS_GABE1 + LMS_GABE2) / 2.0
+LMS_GABE4 = np.array([[0.81, 0.15, 0.04], [0., 1., 0.], [0., 0., 1.]], dtype=np.float16)
+LMS_GABE5 = np.array([[ 0.58, 0.52, -0.1], [ 0., 1., 0.], [0., 0., 1.]], dtype=np.float16)
+LMS_GABE6 = np.array([[ 0.7, 0.33, -0.03], [ 0., 1., 0.], [0., 0., 1.]], dtype=np.float16)
+LMS_GABE7 = np.array([[ 0.62, 0.53, -0.15], [ 0., 1., 0.], [0., 0., 1.]], dtype=np.float16)
 
 IMG_FRONT = "colorful-cube-pattern_1336x768.jpg"
 
