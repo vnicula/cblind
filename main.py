@@ -25,6 +25,22 @@ LMS_GABE7 = np.array([[ 0.62, 0.53, -0.15], [ 0., 1., 0.], [0., 0., 1.]], dtype=
 
 IMG_FRONT = "colorful-cube-pattern_1336x768.jpg"
 
+def set_lms_sliders(lms_t, s1, s2, s3, s4, s5, s6):
+  lms_t[0][0] = s1
+  lms_t[0][1] = s2
+  lms_t[0][2] = 1 - s1 - s2
+
+  lms_t[1][1] = s3
+  lms_t[1][0] = s4
+  lms_t[1][2] = 1 - s3 - s4
+
+  lms_t[2][2] = s5
+  lms_t[2][0] = s6
+  lms_t[2][1] = 1 - s5 - s6
+
+  return lms_t
+  
+
 @app.route("/")
 def home():
   # user_image = os.path.join(app.config['IMAGES_FOLDER'], 'colorful-cube-pattern_1336x768.jpg')
@@ -53,27 +69,7 @@ def test():
   user_image_file_name = IMG_FRONT
   user_image = os.path.join(app.config['IMAGES_FOLDER'], user_image_file_name)
   lms_t = LMSTD
-  lms_t[0][0] = slider_1
-  lms_t[1][1] = slider_3
-  lms_t[2][2] = slider_5
-  # if slider_1 == 1:
-  #   lms_t[0][1] = 0
-  #   lms_t[0][2] = 0
-  # else:  
-  lms_t[0][1] = slider_2
-  lms_t[0][2] = 1 - slider_1 - slider_2
-  if slider_3 == 1:
-    lms_t[1][0] = 0
-    lms_t[1][2] = 0
-  else:
-    lms_t[1][0] = slider_4
-    lms_t[1][2] = 1 - slider_4
-  if slider_5 == 1:
-    lms_t[2][0] = 0
-    lms_t[2][1] = 0
-  else:
-    lms_t[2][0] = slider_6
-    lms_t[2][1] = 1 - slider_6
+  lms_t = set_lms_sliders(lms_t, slider_1, slider_2, slider_3, slider_4, slider_5, slider_6)
   print(lms_t)
   user_image_t_file_name = img_utils.process_image(user_image, lms_t)
   
