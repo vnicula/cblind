@@ -2,6 +2,8 @@ import numpy as np
 import os
 from PIL import Image
 
+from lms_utils import Transforms
+
 
 def add_suffix_to_filename(fpath):
     imag_path_dir, imag_name = os.path.split(fpath)
@@ -149,3 +151,46 @@ def process_image(user_image, lms_t):
   orig_image_g.save(user_image_t)
 
   return user_image_t_file_name
+
+
+def correct_image(user_image: str,
+            protanopia_degree: float = 1.0,
+            deutranopia_degree: float = .0,
+            return_type: str = 'save',
+            ):
+    """
+    Use this method to correct images for People with Colorblindness. The images can be corrected for anyone
+    having either protanopia, deutranopia, or both. Pass protanopia_degree and deutranopia_degree as diagnosed
+    by a doctor using Ishihara test.
+    :param input_path: Input path of the image.
+    :param protanopia_degree: Protanopia degree as diagnosed by doctor using Ishihara test.
+    :param deutranopia_degree: Deutranopia degree as diagnosed by doctor using Ishihara test.
+    :param return_type: How to return the Simulated Image. Use 'pil' for PIL.Image, 'np' for Numpy array,
+                        'save' for Saving to path.
+    :param save_path: Where to save the simulated file. Valid only if return_type is set as 'save'.
+    """
+
+    orig_img = np.asarray(Image.open(user_image).convert("RGB"), dtype=np.float16)
+    orig_img = gamma_correction(orig_img)
+
+    # img_rgb = Utils.load_rgb(input_path)
+
+    transform = Transforms.correction_matrix(protanopia_degree=protanopia_degree,
+                                                deutranopia_degree=deutranopia_degree)
+
+    # img_corrected = np.uint8(np.dot(img_rgb, transform) * 255)
+    # orig_image_g = transform_rgb_with_lms(orig_img, transform.T)
+    orig_image_g = np.dot(orig_img, transform)
+    orig_image_g = array_to_img(orig_image_g)
+    user_image_t = add_suffix_to_filename(user_image)
+    user_image_t_file_name = os.path.basename(user_image_t)
+    
+    if return_type == 'save':
+        orig_image_g.save(user_image_t)
+        return user_image_t_file_name
+
+    if return_type == 'np':
+        return orig_image_g
+
+    if return_type == 'pil':
+        return Image.fromarray(orig_image_g)

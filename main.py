@@ -23,7 +23,7 @@ LMS_GABE5 = np.array([[ 0.58, 0.52, -0.1], [ 0., 1., 0.], [0., 0., 1.]], dtype=n
 LMS_GABE6 = np.array([[ 0.7, 0.33, -0.03], [ 0., 1., 0.], [0., 0., 1.]], dtype=np.float16)
 LMS_GABE7 = np.array([[ 0.62, 0.53, -0.15], [ 0., 1., 0.], [0., 0., 1.]], dtype=np.float16)
 
-IMG_FRONT = "ishiharatest_1_640.jpeg"
+IMG_FRONT = "ishi_3rows.png"
 
 def set_lms_sliders_6(lms_t, s1, s2, s3, s4, s5, s6):
   lms_t[0][0] = s1
@@ -63,9 +63,10 @@ def home():
   user_image_file_name = IMG_FRONT
   # user_image_g = os.path.basename(img_utils.rgb2gray(os.path.join(app.config['IMAGES_FOLDER'], user_image)))
   user_image = os.path.join(app.config['IMAGES_FOLDER'], user_image_file_name)
-  user_image_t_file_name = img_utils.process_image(user_image, LMS_GABE3)
+  # user_image_t_file_name = img_utils.process_image(user_image, LMS_GABE3)
+  user_image_t_file_name = img_utils.correct_image(user_image)
 
-  return render_template("template.html", user_image=user_image_file_name, 
+  return render_template("one_image.html", user_image=user_image_file_name, 
     user_image_g=user_image_t_file_name, min_1=0, max_1=1, min_2=-1.5, max_2=1.5, 
         value1=1, value2=0, value3=1, value4=0, value5=1, value6=0)
   
@@ -91,6 +92,30 @@ def test():
   user_image_t_file_name = img_utils.process_image(user_image, lms_t)
   
   return render_template("template.html", user_image=user_image_file_name, 
+    user_image_g=user_image_t_file_name, min_1=0, max_1=1, min_2=-1.5, max_2=1.5, value1=slider_1, value2=slider_2, value3=slider_3, value4=slider_4,
+    value5=slider_5, value6=slider_6)
+
+
+@app.route("/view", methods=["POST"])
+def view():
+  if request.method == 'POST':
+      print(request.form)
+      slider_1 = float(request.form["Slider_1"])
+      slider_2 = float(request.form["Slider_2"])
+      slider_3 = float(request.form["Slider_3"])
+      slider_4 = float(request.form["Slider_4"])
+      slider_5 = float(request.form["Slider_5"])
+      slider_6 = float(request.form["Slider_6"])
+      
+  user_image_file_name = IMG_FRONT
+  user_image = os.path.join(app.config['IMAGES_FOLDER'], user_image_file_name)
+  lms_t = LMSTD
+
+  lms_t = set_lms_sliders_3(lms_t, slider_1, slider_3, slider_5)
+  print(lms_t)
+  user_image_t_file_name = img_utils.correct_image(user_image, slider_1, slider_3)
+
+  return render_template("one_image.html", user_image=user_image_file_name, 
     user_image_g=user_image_t_file_name, min_1=0, max_1=1, min_2=-1.5, max_2=1.5, value1=slider_1, value2=slider_2, value3=slider_3, value4=slider_4,
     value5=slider_5, value6=slider_6)
 
