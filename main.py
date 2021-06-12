@@ -23,9 +23,9 @@ LMS_GABE5 = np.array([[ 0.58, 0.52, -0.1], [ 0., 1., 0.], [0., 0., 1.]], dtype=n
 LMS_GABE6 = np.array([[ 0.7, 0.33, -0.03], [ 0., 1., 0.], [0., 0., 1.]], dtype=np.float16)
 LMS_GABE7 = np.array([[ 0.62, 0.53, -0.15], [ 0., 1., 0.], [0., 0., 1.]], dtype=np.float16)
 
-IMG_FRONT = "colorful-cube-pattern_1336x768.jpg"
+IMG_FRONT = "ishiharatest_1_640.jpeg"
 
-def set_lms_sliders(lms_t, s1, s2, s3, s4, s5, s6):
+def set_lms_sliders_6(lms_t, s1, s2, s3, s4, s5, s6):
   lms_t[0][0] = s1
   lms_t[0][1] = s2
   lms_t[0][2] = 1 - s1 - s2
@@ -39,7 +39,22 @@ def set_lms_sliders(lms_t, s1, s2, s3, s4, s5, s6):
   lms_t[2][1] = 1 - s5 - s6
 
   return lms_t
-  
+
+def set_lms_sliders_3(lms_t, s1, s2, s3):
+  lms_t[0][0] = 1. - s1
+  lms_t[0][1] = 0.90822864 * s1
+  lms_t[0][2] = 0.008192 * s1
+
+  lms_t[1][1] = 1. - s2
+  lms_t[1][0] = 1.10104433 * s2
+  lms_t[1][2] = -0.00901975 * s2
+
+  lms_t[2][2] = 1. - s3
+  lms_t[2][0] = -0.15773032 * s3
+  lms_t[2][1] = 1.19465634 * s3
+
+  return lms_t
+
 
 @app.route("/")
 def home():
@@ -69,7 +84,9 @@ def test():
   user_image_file_name = IMG_FRONT
   user_image = os.path.join(app.config['IMAGES_FOLDER'], user_image_file_name)
   lms_t = LMSTD
-  lms_t = set_lms_sliders(lms_t, slider_1, slider_2, slider_3, slider_4, slider_5, slider_6)
+
+  lms_t = set_lms_sliders_3(lms_t, slider_2, slider_4, slider_6)
+  # lms_t = set_lms_sliders_6(lms_t, slider_1, slider_2, slider_3, slider_4, slider_5, slider_6)
   print(lms_t)
   user_image_t_file_name = img_utils.process_image(user_image, lms_t)
   
