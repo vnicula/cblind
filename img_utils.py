@@ -6,11 +6,16 @@ from lms_utils import Transforms
 
 
 def add_suffix_to_filename(fpath):
+    
     imag_path_dir, imag_name = os.path.split(fpath)
     imag_name, imag_ext = os.path.splitext(imag_name)
-    imag_name += '_g'
+    imag_name += '_g' + str(add_suffix_to_filename.img_index)
+    add_suffix_to_filename.img_index += 1
     imag_name += imag_ext
     return os.path.join(imag_path_dir, imag_name)
+
+add_suffix_to_filename.img_index = 0
+
 
 def rgb2gray(rgb_img_path):
     img = Image.open(rgb_img_path)
@@ -177,7 +182,7 @@ def correct_image(user_image: str,
 
     transform = Transforms.correction_matrix(protanopia_degree=protanopia_degree,
                                                 deutranopia_degree=deutranopia_degree)
-
+    print(transform)
     # img_corrected = np.uint8(np.dot(img_rgb, transform) * 255)
     # orig_image_g = transform_rgb_with_lms(orig_img, transform.T)
     orig_image_g = np.dot(orig_img, transform)

@@ -18,8 +18,8 @@
             </tr>
             <tr>     
 			  	<td colspan="2">
-			  	  <form method="POST" action="view">
-			    		<input type="range" value={{value1}} min={{min_1}} max={{max_1}} name="Slider_1" class="slider" step="0.01" align="bottom"/>			    		
+			  	  <form method="POST" action="slider_update">
+			    		<input type="range" value={{value1}} min={{min_1}} max={{max_1}} id="Slider_1" name="Slider_1" class="slider" step="0.01" align="bottom"/>			    		
 			    		<input id="rangeInput1" value={{value2}} type="range" min={{min_2}} max={{max_2}} name="Slider_2" class="slider" step="0.01" align="bottom"
 			    		oninput="amount1.value=rangeInput1.value"/>
 			    		<input id="amount1" type="number" value={{value2}} min={{min_2}} max={{max_2}} step="0.01" 
@@ -36,8 +36,20 @@
 			    		oninput="amount3.value=rangeInput3.value"/>
    						<input id="amount3" type="number" value={{value6}} min={{min_2}} max={{max_2}} step="0.01" 
    						oninput="rangeInput3.value=amount3.value"/>
-    
+
 			     	 	<input type="submit" value="submit"/>
+
+                        <script> 
+                            const Http = new XMLHttpRequest();
+                            var rangeslider = document.getElementById("Slider_1"); 
+                            var current;
+                                        
+                            rangeslider.oninput = function() {
+                                current = this.value;
+                                Http.open('POST', '/slider_update')
+                                Http.send(current)
+                            }
+                        </script> 
 			    	</form>
             	</td>
         	</tr>

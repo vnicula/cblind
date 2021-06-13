@@ -7,6 +7,7 @@ import img_utils
 # from matplotlib.widgets import Slider
 
 app = Flask(__name__)
+# app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 app.config['IMAGES_FOLDER'] = os.path.join(APP_ROOT, "static/images")
@@ -24,6 +25,7 @@ LMS_GABE6 = np.array([[ 0.7, 0.33, -0.03], [ 0., 1., 0.], [0., 0., 1.]], dtype=n
 LMS_GABE7 = np.array([[ 0.62, 0.53, -0.15], [ 0., 1., 0.], [0., 0., 1.]], dtype=np.float16)
 
 IMG_FRONT = "ishi_3rows.png"
+lms_t = LMSTP
 
 def set_lms_sliders_6(lms_t, s1, s2, s3, s4, s5, s6):
   lms_t[0][0] = s1
@@ -84,7 +86,6 @@ def test():
       
   user_image_file_name = IMG_FRONT
   user_image = os.path.join(app.config['IMAGES_FOLDER'], user_image_file_name)
-  lms_t = LMSTD
 
   lms_t = set_lms_sliders_3(lms_t, slider_2, slider_4, slider_6)
   # lms_t = set_lms_sliders_6(lms_t, slider_1, slider_2, slider_3, slider_4, slider_5, slider_6)
@@ -118,6 +119,27 @@ def view():
   return render_template("one_image.html", user_image=user_image_file_name, 
     user_image_g=user_image_t_file_name, min_1=0, max_1=1, min_2=-1.5, max_2=1.5, value1=slider_1, value2=slider_2, value3=slider_3, value4=slider_4,
     value5=slider_5, value6=slider_6)
+
+
+@app.route('/slider_update', methods=['POST'])
+def slider():
+  received_data = float(request.data)
+  print(received_data)
+  user_image_file_name = IMG_FRONT
+  user_image = os.path.join(app.config['IMAGES_FOLDER'], user_image_file_name)
+
+  user_image_t_file_name = img_utils.correct_image(user_image, received_data, 1.0-lms_t[1][1])
+  print(user_image_t_file_name)
+
+  return render_template("one_image.html", user_image=user_image_file_name, 
+    user_image_g=user_image_t_file_name, min_1=0, max_1=1, min_2=-1.5, max_2=1.5, value1=received_data, value2=0, value3=0, value4=0,
+    value5=0, value6=0)
+    
+
+@app.after_request
+def add_header(response):
+    response.headers['Cache-Control'] = 'public, max-age=0'
+    return response
 
 
 if __name__ == '__main__':
