@@ -13,7 +13,7 @@
     	<tbody>
         	<tr>
            	 	<td>
-              		<img src="{{ url_for('static', filename = 'images/'+user_image_g) }}" align="left" alt="User Image">
+              		<img id="yourImage" src="{{ url_for('static', filename = 'images/'+user_image_g) }}" align="left" alt="User Image">
             	</td>
             </tr>
             <tr>     
@@ -38,22 +38,50 @@
    						oninput="rangeInput3.value=amount3.value"/>
 
 			     	 	<input type="submit" value="submit"/>
-
-                        <script> 
-                            const Http = new XMLHttpRequest();
-                            var rangeslider = document.getElementById("Slider_1"); 
-                            var current;
-                                        
-                            rangeslider.oninput = function() {
-                                current = this.value;
-                                Http.open('POST', '/slider_update')
-                                Http.send(current)
-                            }
-                        </script> 
 			    	</form>
             	</td>
         	</tr>
   	  </tbody>
 	</table>
 </body>
+
+<!--
+<script type="text/javascript">
+    $("#Slider_1").change(function(){
+        var sliderVal = $(this).val();
+        console.log("Slider 1" , sliderVal);
+        $.ajax({ 
+            medthod: 'POST',
+            url:'/slider_update',
+            data: JSON.stringify({Slider_1: sliderVal}),
+            success: function(data){
+                $("#yourImage").attr('src', 'data:image/png;base64, ' + data);
+            }
+        });
+    });
+</script>
+-->
+
+<!--- SCRIPTS --->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    var slide = document.getElementById('Slider_1');
+    
+    slide.onchange = function() {
+        var obj1 =  $("#Slider_1");
+        value = obj1.getValue();
+        $.post({
+            url:'/slider_update',
+            data: 0.5,
+            success: function(data){
+                $("#yourImage").attr('src', 'data:image/png;base64, ' + data);
+            },
+            error: function(error){
+                  alert(response);
+                  console.log(error);
+            }
+          });
+  }
+  </script>
+
 </html>

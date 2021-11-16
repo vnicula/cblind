@@ -1,6 +1,7 @@
+import io
 import numpy as np
 import os
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response, send_file
 from PIL import Image
 
 import img_utils
@@ -66,7 +67,7 @@ def home():
   # user_image_g = os.path.basename(img_utils.rgb2gray(os.path.join(app.config['IMAGES_FOLDER'], user_image)))
   user_image = os.path.join(app.config['IMAGES_FOLDER'], user_image_file_name)
   # user_image_t_file_name = img_utils.process_image(user_image, LMS_GABE3)
-  user_image_t_file_name = img_utils.correct_image(user_image)
+  user_image_t_file_name = img_utils.correct_image(user_image, return_type='save')
 
   return render_template("one_image.html", user_image=user_image_file_name, 
     user_image_g=user_image_t_file_name, min_1=0, max_1=1, min_2=-1.5, max_2=1.5, 
@@ -114,7 +115,7 @@ def view():
 
   lms_t = set_lms_sliders_3(lms_t, slider_1, slider_3, slider_5)
   print(lms_t)
-  user_image_t_file_name = img_utils.correct_image(user_image, slider_1, slider_3)
+  user_image_t_file_name = img_utils.correct_image(user_image, slider_1, slider_3, return_type='save')
 
   return render_template("one_image.html", user_image=user_image_file_name, 
     user_image_g=user_image_t_file_name, min_1=0, max_1=1, min_2=-1.5, max_2=1.5, value1=slider_1, value2=slider_2, value3=slider_3, value4=slider_4,
@@ -123,24 +124,26 @@ def view():
 
 @app.route('/slider_update', methods=['POST'])
 def slider():
+  print(request.data)
   received_data = float(request.data)
   print(received_data)
   user_image_file_name = IMG_FRONT
   user_image = os.path.join(app.config['IMAGES_FOLDER'], user_image_file_name)
 
-  user_image_t_file_name = img_utils.correct_image(user_image, received_data, 1.0-lms_t[1][1])
-  print(user_image_t_file_name)
+  user_image_t = img_utils.correct_image(user_image, received_data, 1.0-lms_t[1][1])
+  # print(user_image_t_file_name)
 
-  return render_template("one_image.html", user_image=user_image_file_name, 
-    user_image_g=user_image_t_file_name, min_1=0, max_1=1, min_2=-1.5, max_2=1.5, value1=received_data, value2=0, value3=0, value4=0,
-    value5=0, value6=0)
+  byte_io = io.BytesIO()
+  user_image_t.save(byte_io, 'PNG')
+  byte_io.seek(0)
+  response = make_response(send_file(byte_io,mimetype='image/png'))
+  response.headers['Content-Transfer-Encoding']='base64'
+  return response 
+
+  # return render_template("one_image.html", user_image=user_image_file_name, 
+  #   user_image_g=user_image_t_file_name, min_1=0, max_1=1, min_2=-1.5, max_2=1.5, value1=received_data, value2=0, value3=0, value4=0,
+  #   value5=0, value6=0)
     
-
-@app.after_request
-def add_header(response):
-    response.headers['Cache-Control'] = 'public, max-age=0'
-    return response
-
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', debug=True)

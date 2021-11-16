@@ -161,7 +161,7 @@ def process_image(user_image, lms_t):
 def correct_image(user_image: str,
             protanopia_degree: float = 1.0,
             deutranopia_degree: float = .0,
-            return_type: str = 'save',
+            return_type: str = 'pil',
             ):
     """
     Use this method to correct images for People with Colorblindness. The images can be corrected for anyone
@@ -186,16 +186,16 @@ def correct_image(user_image: str,
     # img_corrected = np.uint8(np.dot(img_rgb, transform) * 255)
     # orig_image_g = transform_rgb_with_lms(orig_img, transform.T)
     orig_image_g = np.dot(orig_img, transform)
-    orig_image_g = array_to_img(orig_image_g)
-    user_image_t = add_suffix_to_filename(user_image)
-    user_image_t_file_name = os.path.basename(user_image_t)
+    orig_image_pil = array_to_img(orig_image_g)
     
     if return_type == 'save':
-        orig_image_g.save(user_image_t)
+        user_image_t = add_suffix_to_filename(user_image)
+        user_image_t_file_name = os.path.basename(user_image_t)
+        orig_image_pil.save(user_image_t)
         return user_image_t_file_name
 
     if return_type == 'np':
         return orig_image_g
 
     if return_type == 'pil':
-        return Image.fromarray(orig_image_g)
+        return orig_image_pil
